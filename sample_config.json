@@ -1,0 +1,7 @@
+{
+	"LoginURL": "https://xxxxx.slack.com/sso/saml/start?redir=%2Fmessages",
+	"LoginID": "YOUR_EMAIL",
+	"LoginPass": "YOUR_PASSWORD",
+	"ChannelURL": "https://app.slack.com/client/XXXXXXX/XXXXXXX",
+	"CmdFile": "/cmd2s/_region_feed.txt"
+}
