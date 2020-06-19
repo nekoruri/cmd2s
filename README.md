@@ -99,4 +99,4 @@ URL: https://status.aws.amazon.com/rss/sqs-ap-northeast-3.rss
 
 ## As reference information
 - AWS Service Health Dashboard のRSS Feed をSlack に自動登録する #aws #slack - uchimanajet7のメモ
-	- Under construction.
+	- https://uchimanajet7.hatenablog.com/entry/2020/06/19/180000
