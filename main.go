@@ -35,12 +35,17 @@ type userConfig struct {
 }
 
 func (c *userConfig) loadConfig() error {
-	dir, err := getExecDir()
-	if err != nil {
-		return err
-	}
+	path := ""
+	if len(os.Args) > 1 {
+		path = os.Args[1]
+	} else {
+		dir, err := getExecDir()
+		if err != nil {
+			return err
+		}
 
-	path := filepath.Join(dir, "config.json")
+		path = filepath.Join(dir, "config.json")
+	}
 
 	f, err := os.Open(path)
 	if err != nil {
