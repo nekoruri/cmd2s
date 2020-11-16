@@ -176,9 +176,9 @@ func sendCmdToSlack(url string, cmds []string) chromedp.Tasks {
 
 	// Run multiple commands
 	for _, value := range cmds {
-		tasks = append(tasks, chromedp.SendKeys(cmdForm, "/feed "))
-		tasks = append(tasks, chromedp.SendKeys(cmdForm, "subscribe "))
-		tasks = append(tasks, chromedp.SendKeys(cmdForm, value))
+		cmd, args := strings.Split(value, " ", 2)
+		tasks = append(tasks, chromedp.SendKeys(cmdForm, cmd + " "))
+		tasks = append(tasks, chromedp.SendKeys(cmdForm, args))
 		tasks = append(tasks, chromedp.Click(sendBtn))
 	}
 
