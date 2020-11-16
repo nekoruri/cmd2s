@@ -153,15 +153,15 @@ func writeCheckResult(text string) error {
 }
 
 func checkResultToSlack(url string, cmd string, resp *string) chromedp.Tasks {
-	const slackBtn string = `//div[@class='ql-buttons']`
 	const cmdForm string = `//*[contains(@class, 'ql-editor')]`
 	const sendBtn string = `//button[@data-qa='texty_send_button']`
 	const onlyMsg string = `//div[@class='c-virtual_list__item' and contains(@id, 'xxxxx')]`
 
 	return chromedp.Tasks{
 		chromedp.Navigate(url),
-		chromedp.WaitVisible(slackBtn),
-		chromedp.SendKeys(cmdForm, cmd),
+		chromedp.WaitVisible(sendBtn),
+		chromedp.SendKeys(cmdForm, "/feed "),
+		chromedp.SendKeys(cmdForm, "list"),
 		chromedp.Click(sendBtn),
 		chromedp.Sleep(2 * time.Second),
 		chromedp.WaitVisible(onlyMsg),
@@ -170,17 +170,20 @@ func checkResultToSlack(url string, cmd string, resp *string) chromedp.Tasks {
 }
 
 func sendCmdToSlack(url string, cmds []string) chromedp.Tasks {
-	const slackBtn string = `//div[@class='ql-buttons']`
 	const cmdForm string = `//*[contains(@class, 'ql-editor')]`
 	const sendBtn string = `//button[@data-qa='texty_send_button']`
 
 	tasks := chromedp.Tasks{}
 	tasks = append(tasks, chromedp.Navigate(url))
-	tasks = append(tasks, chromedp.WaitVisible(slackBtn))
+	tasks = append(tasks, chromedp.WaitVisible(sendBtn))
+	tasks = append(tasks, chromedp.Navigate(url))
+	tasks = append(tasks, chromedp.WaitVisible(sendBtn))
 
 	// Run multiple commands
 	for _, value := range cmds {
-		tasks = append(tasks, chromedp.SendKeys(cmdForm, value))
+		cmd, args := strings.Split(value, " ", 2)
+		tasks = append(tasks, chromedp.SendKeys(cmdForm, cmd+" "))
+		tasks = append(tasks, chromedp.SendKeys(cmdForm, args))
 		tasks = append(tasks, chromedp.Click(sendBtn))
 	}
 
@@ -188,25 +191,17 @@ func sendCmdToSlack(url string, cmds []string) chromedp.Tasks {
 }
 
 func loginToSlack(url string, id string, pass string) chromedp.Tasks {
-	const idForm string = `//input[@id='i0116']`
-	const nextBtn string = `//input[@id='idSIButton9']`
-	const passForm string = `//input[@id='i0118']`
-	const signInBtn string = `//input[@id='idSIButton9' and contains(@value, 'サインイン')]`
-	const yesBtn string = `//input[@id='idSIButton9' and contains(@value, 'はい')]`
-	const slackBtn string = `//div[@class='ql-buttons']`
+	const idForm string = `//input[@id='email']`
+	const passForm string = `//input[@id='password']`
+	const signInBtn string = `//button[@id='signin_btn']`
+	const sendBtn string = `//button[@data-qa='texty_send_button']`
 
 	return chromedp.Tasks{
 		chromedp.Navigate(url),
 		chromedp.WaitVisible(idForm),
 		chromedp.SendKeys(idForm, id),
-		chromedp.Click(nextBtn),
-		chromedp.WaitVisible(passForm),
 		chromedp.SendKeys(passForm, pass),
-		chromedp.WaitVisible(signInBtn),
-		chromedp.Click(nextBtn),
-		chromedp.WaitVisible(yesBtn),
-		chromedp.Click(nextBtn),
-		chromedp.WaitVisible(slackBtn),
+		chromedp.Click(signInBtn),
 	}
 }
 
